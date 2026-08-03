@@ -1,7 +1,7 @@
 function setup() {
-  k = 0;
-  l = 0;
   d = 5;
+  k = d;
+  l = 0;
   L = 400
   createCanvas(L, L);
   background(L);
