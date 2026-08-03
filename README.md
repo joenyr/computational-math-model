@@ -1,1 +1,1 @@
-# modelagem-matem-tica-computacional
+# computational-math-model
