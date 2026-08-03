@@ -19,7 +19,7 @@ function draw() {
       k = 0;
       l = l+1;
     } else {
-      k = 0;
+      k = d;
       l = 0;
       background(L);
     }
