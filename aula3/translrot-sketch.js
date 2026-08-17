@@ -1,38 +1,48 @@
+let L, o, p, I, t, w;
+
 function setup() {
   L = 220;
-  o = [0,0,0];
-  createCanvas(L, L,WEBGL);
+  t = 0;
+  o = [0, 0, 0];
+  createCanvas(L, L, WEBGL);
   orbitControl();
-  p = [20,20,20];
-  I = [[1,0,0],[0,1,0],[0,0,1]];
+  p = [20, 20, 20];
+  I = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
 }
 
 function draw() {
-  
   function plano(L) {
-    background(L);
-    line(L/2,0,0,-L/2,0,0);
-    line(0,L/2,0,0,-L/2,0);
-    line(0,0,L/2,0,0,-L/2);
+    background(220); // Ajustado para não usar a variável global de escopo L incorretamente como cor
+    line(L/2, 0, 0, -L/2, 0, 0);
+    line(0, L/2, 0, 0, -L/2, 0);
+    line(0, 0, L/2, 0, 0, -L/2);
   }
-  plano(L)
+  plano(L);
 
-  function vxa(v,a) {
-    b = Array[3][3];
-    for (let x=1; x<4; x++) {
-      for (let y=1; y<4; y++) {
-        b[x][y] = v[x]*a[x][y];
+  function vxe(v, e) {
+    for(i=0;i<3;i++) {
+      v[i] = v[i]*e;
+    }
+    return v;
+  }
+
+  function vxa(v, a) {
+    let b = [];
+    for (let i = 0; i < 3; i++) {
+      b[i] = [];
+      for (let j = 0; j < 3; j++) {
+        b[i][j] = v[i] * a[i][j];
       }
     }
     return b;
   }
 
-  function axa(a,b) {
-    c = Array[3][3];
-    for (let x=1; x<4; x++) {
-      for (let y=1; y<4; y++) {
-        for (let z=1; z,3; z++) {
-          b[x][y] = a[x][y][z]*b[y][x][z];
+  function axa(a, b) {
+    let c = [[0,0,0], [0,0,0], [0,0,0]];
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        for (let k = 0; k < 3; k++) {
+          c[i][j] += a[i][k] * b[k][j];
         }
       }
     }
@@ -40,34 +50,33 @@ function draw() {
   }
 
   function rot(a, xang, yang, zang) {
-    xrot = [[1,0,0],
-            [0,cos(xang),-sin(xang)],
-            [0,sin(xang),cos(xang)]];
-    yrot = [[cos(yang),0,sin(yang)],
-            [0,1,0],
-            [-sin(yang),0,cos(yang)]];
-    zrot = [[cos(zang),-sin(zang),0],
-            [sin(zang),cos(zang),0],
-            [0,0,1]];
+    let xrot = [[1, 0, 0],
+                [0, cos(xang), -sin(xang)],
+                [0, sin(xang), cos(xang)]];
+    
+    let yrot = [[cos(yang), 0, sin(yang)],
+                [0, 1, 0],
+                [-sin(yang), 0, cos(yang)]];
+    
+    let zrot = [[cos(zang), -sin(zang), 0],
+                [sin(zang), cos(zang), 0],
+                [0, 0, 1]];
 
-    for(let x=1; x<4; x++) {
-      for(let y=1; y<4; y++) {
-        for(let z=1; z<4; z++) {
-      rot[x][y][z] = 1;
-    }
-    }
-    }
-    rot = axa(rot,xrot);
-    rot = axa(rot,yrot);
-    rot = axa(rot,zrot);
+    let matrizCombinada = axa(xrot, yrot);
+    matrizCombinada = axa(matrizCombinada, zrot);
 
-    return axa(a,rot);
+    return axa(a, matrizCombinada);
   }
 
   function piramide(a) {
-    for(i=1; i<4;i++) {
+    for (let i = 0; i < 3; i++) {
       line(...o,...a[i]);
+      if (i<2)    line(...a[i],...a[i+1]);
     }
+    line(...a[2],...a[0]);
   }
-  piramide(vxa(p,I));
+
+  t++;
+  m = rot(vxa(p,I),...vxe([1/200,1/300,1/400],t*2*PI));
+  piramide(m);
 }
