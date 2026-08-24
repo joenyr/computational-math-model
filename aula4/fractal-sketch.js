@@ -3,7 +3,7 @@ function setup() {
   createCanvas(400, 400);
   background(400);
   o = 200;
-  l = 200;
+  l = 370;
   t1 = 10;
   t2 = 8;
   p = [o+t1,o+t2];
